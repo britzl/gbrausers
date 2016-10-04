@@ -1,0 +1,36 @@
+
+
+function init(self)
+	self.clouds = {}
+	
+	for i=1,150 do
+		local position = vmath.vector3(math.random(-4000, 4000), math.random(20, 200), -1)
+		local id = factory.create("#cloudfactory", position, nil, {}, math.random(4, 10) / 5)
+		table.insert(self.clouds, id)
+	end
+end
+
+function final(self)
+    -- Add finalization code here
+    -- Remove this function if not needed
+end
+
+function update(self, dt)
+    -- Add update code here
+    -- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+    -- Add message-handling code here
+    -- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+    -- Add input-handling code here
+    -- Remove this function if not needed
+end
+
+function on_reload(self)
+    -- Add reload-handling code here
+    -- Remove this function if not needed
+end
