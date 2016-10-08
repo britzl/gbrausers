@@ -10,6 +10,18 @@ images {
 images {
   image: "/assets/images/cloud1.png"
 }
+images {
+  image: "/assets/images/trail.png"
+}
+images {
+  image: "/assets/images/bullet.png"
+}
+images {
+  image: "/assets/images/watersplash1.png"
+}
+images {
+  image: "/assets/images/plane3.png"
+}
 margin: 0
 extrude_borders: 2
 inner_padding: 0

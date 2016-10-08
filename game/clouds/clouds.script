@@ -3,8 +3,8 @@
 function init(self)
 	self.clouds = {}
 	
-	for i=1,150 do
-		local position = vmath.vector3(math.random(-4000, 4000), math.random(20, 200), -1)
+	for i=1,350 do
+		local position = vmath.vector3(math.random(-4000, 4000), math.random(20, 800), -1)
 		local id = factory.create("#cloudfactory", position, nil, {}, math.random(4, 10) / 5)
 		table.insert(self.clouds, id)
 	end

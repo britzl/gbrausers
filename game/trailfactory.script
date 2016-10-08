@@ -1,0 +1,43 @@
+local geometry = require "ludobits.m.geometry"
+
+go.property("interval", 0.01)
+
+function init(self)
+	self.trail = {}
+	self.next = self.interval
+	self.last_pos = go.get_world_position()
+end
+
+function final(self)
+	while #self.trail > 0 do
+		go.delete(table.remove(self.trail))
+	end
+end
+
+function update(self, dt)
+	self.next = self.next - dt
+	if self.next < 0 then
+		local pos = go.get_world_position()
+		local distance = geometry.distance(pos, self.last_pos)
+		if distance == 0 then distance = 1 end
+		local scale = vmath.vector3(1, distance * 0.5, 1)
+		local rot = geometry.angle_towards(self.last_pos, pos)
+		local id = factory.create("#factory", pos, rot, {}, scale)
+		table.insert(self.trail, id)
+
+
+
+		self.last_pos = pos
+
+		self.next = self.interval
+	end
+	
+	while #self.trail > 100 do
+		go.delete(table.remove(self.trail, 1))
+	end
+end
+
+function on_reload(self)
+    -- Add reload-handling code here
+    -- Remove this function if not needed
+end

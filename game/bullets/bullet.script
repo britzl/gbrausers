@@ -1,17 +1,19 @@
-function init(self)
-	math.randomseed(os.time())
-	msg.post("@render:", "clear_color", { color = vmath.vector4(134/255, 174/255, 114/255, 1) })
-	--msg.post("@render:", "clear_color", { color = vmath.vector4(192/255, 207/255, 181/255, 1) })
-end
+local kinematic = require "ludobits.m.kinematic"
 
-function final(self)
-    -- Add finalization code here
-    -- Remove this function if not needed
+go.property("speed", 0)
+go.property("angle", 0)
+
+function init(self)
+	self.speed = self.speed + 300
+	self.lifetime = 3
 end
 
 function update(self, dt)
-    -- Add update code here
-    -- Remove this function if not needed
+	kinematic.forward(math.rad(self.angle), self.speed * dt)
+	self.lifetime = self.lifetime - dt
+	if self.lifetime <= 0 then
+		go.delete()
+	end
 end
 
 function on_message(self, message_id, message, sender)

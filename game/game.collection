@@ -1,10 +1,30 @@
 name: "game"
 collection_instances {
   id: "clouds"
-  collection: "/game/clouds.collection"
+  collection: "/game/clouds/clouds.collection"
   position {
     x: 0.0
     y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "enemyplane"
+  collection: "/game/enemyplane.collection"
+  position {
+    x: 121.80786
+    y: 88.0816
     z: 0.0
   }
   rotation {
@@ -25,6 +45,26 @@ collection_instances {
   position {
     x: 81.55242
     y: 57.536983
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+collection_instances {
+  id: "water"
+  collection: "/game/water/water.collection"
+  position {
+    x: 0.0
+    y: -75.0
     z: 0.0
   }
   rotation {
@@ -76,66 +116,13 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "water"
-  data: "embedded_components {\n"
-  "  id: \"collisionobject\"\n"
-  "  type: \"collisionobject\"\n"
-  "  data: \"collision_shape: \\\"\\\"\\n"
-  "type: COLLISION_OBJECT_TYPE_STATIC\\n"
-  "mass: 0.0\\n"
-  "friction: 0.1\\n"
-  "restitution: 0.5\\n"
-  "group: \\\"water\\\"\\n"
-  "mask: \\\"plane\\\"\\n"
-  "mask: \\\"bullet\\\"\\n"
-  "embedded_collision_shape {\\n"
-  "  shapes {\\n"
-  "    shape_type: TYPE_BOX\\n"
-  "    position {\\n"
-  "      x: 0.0\\n"
-  "      y: -50.0\\n"
-  "      z: 0.0\\n"
-  "    }\\n"
-  "    rotation {\\n"
-  "      x: 0.0\\n"
-  "      y: 0.0\\n"
-  "      z: 0.0\\n"
-  "      w: 1.0\\n"
-  "    }\\n"
-  "    index: 0\\n"
-  "    count: 3\\n"
-  "  }\\n"
-  "  data: 0.5\\n"
-  "  data: 50.0\\n"
-  "  data: 10.0\\n"
-  "}\\n"
-  "linear_damping: 0.0\\n"
-  "angular_damping: 0.0\\n"
-  "locked_rotation: false\\n"
-  "\"\n"
+  id: "hud"
+  data: "components {\n"
+  "  id: \"gui\"\n"
+  "  component: \"/game/hud.gui\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"sprite\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/assets/game.atlas\\\"\\n"
-  "default_animation: \\\"water\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 0.0\n"
-  "    y: -0.5\n"
   "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
@@ -148,7 +135,7 @@ embedded_instances {
   ""
   position {
     x: 0.0
-    y: 0.0
+    y: -18.481508
     z: 0.0
   }
   rotation {
@@ -158,7 +145,7 @@ embedded_instances {
     w: 1.0
   }
   scale3 {
-    x: 8000.0
+    x: 1.0
     y: 1.0
     z: 1.0
   }
