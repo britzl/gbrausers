@@ -34,6 +34,10 @@ key_trigger {
   input: KEY_A
   action: "left"
 }
+key_trigger {
+  input: KEY_P
+  action: "pause"
+}
 mouse_trigger {
   input: MOUSE_BUTTON_1
   action: "touch"

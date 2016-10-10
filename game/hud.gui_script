@@ -3,18 +3,28 @@ local broadcast = require "ludobits.m.broadcast"
 function init(self)
 	local health_node = gui.get_node("health")
 	local score_node = gui.get_node("score")
-
+	local pause_node = gui.get_node("paused")
+	gui.set_enabled(pause_node, false)
+	
 	broadcast.register("update_health", function(message)
-		gui.set_text(health_node, "DMG:" .. message.health)
+		gui.set_text(health_node, "HP:" .. message.health)
 	end)
 	broadcast.register("update_score", function(message)
 		gui.set_text(score_node, "SCORE:" .. message.score)
+	end)
+	broadcast.register("game_paused", function(message)
+		gui.set_enabled(pause_node, true)
+	end)
+	broadcast.register("game_resumed", function(message)
+		gui.set_enabled(pause_node, false)
 	end)
 end
 
 function final(self)
 	broadcast.unregister("update_health")
 	broadcast.unregister("update_score")
+	broadcast.unregister("game_paused")
+	broadcast.unregister("game_resumed")
 end
 
 function on_message(self, message_id, message, sender)

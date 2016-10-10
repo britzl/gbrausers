@@ -8,6 +8,7 @@ local function spawn_enemy()
 end
 
 function init(self)
+	msg.post(".", "acquire_input_focus")
 	math.randomseed(os.time())
 	msg.post("@render:", "clear_color", { color = vmath.vector4(134/255, 174/255, 114/255, 1) })
 	
@@ -27,6 +28,7 @@ function init(self)
 end
 
 function final(self)
+	msg.post(".", "release_input_focus")
 	flow.stop(self.gameloop)
 	broadcast.unregister("enemyplane_death")
 end
@@ -38,4 +40,16 @@ end
 function on_message(self, message_id, message, sender)
 	broadcast.on_message(message_id, message, sender)
 	flow.on_message(message_id, message, sender)
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("pause") and action.released then
+		broadcast.send("game_paused")
+		msg.post("controller:/controller#gameproxy", "set_time_step", { factor = 0, mode = 0 })
+		return true
+	elseif action.released then
+		broadcast.send("game_resumed")
+		msg.post("controller:/controller#gameproxy", "set_time_step", { factor = 1, mode = 0 })
+		return true
+	end
 end

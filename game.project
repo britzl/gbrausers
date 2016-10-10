@@ -1,5 +1,5 @@
 [project]
-title = GBJam5
+title = GBRausers
 version = 0.1
 dependencies = https://github.com/britzl/ludobits/archive/master.zip
 
