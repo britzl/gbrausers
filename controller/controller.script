@@ -1,7 +1,18 @@
 local broadcast = require "ludobits.m.broadcast"
 local flow = require "ludobits.m.flow"
 
-local function show_game()
+local function start_game()
+	flow(function()
+		flow.unload("#menuproxy")
+		flow.load("#gameproxy")
+	end)
+end
+
+local function show_menu()
+	flow(function()
+		flow.unload("#gameproxy")
+		flow.load("#menuproxy")
+	end)
 end
 
 local function restart()
@@ -13,12 +24,14 @@ end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	broadcast.register("player_death", function()
-		restart()
-	end)
+	msg.post("@render:", "clear_color", { color = vmath.vector4(134/255, 174/255, 114/255, 1) })
+
+	broadcast.register("player_death", show_menu)
+	
+	broadcast.register("start_game", start_game)
 	
 	flow(function()
-		flow.load("#gameproxy")
+		flow.load("#menuproxy")
 	end)
 end
 

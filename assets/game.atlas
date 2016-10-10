@@ -22,6 +22,9 @@ images {
 images {
   image: "/assets/images/plane3.png"
 }
+images {
+  image: "/assets/images/logo.png"
+}
 margin: 0
 extrude_borders: 2
 inner_padding: 0
