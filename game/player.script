@@ -1,5 +1,4 @@
 local input = require "ludobits.m.input"
-local kinematic = require "ludobits.m.kinematic"
 local broadcast = require "ludobits.m.broadcast"
 
 local CAMERA_OFFSET = vmath.vector3(-80, -77, 0)
@@ -17,13 +16,16 @@ local MAX_HEIGHT = 400
 local MAX_SPEED = 200
 local MAX_BULLET_SPEED = 300
 local MIN_SPEED = 50
-local ROTATION_ACCELERATION = 380
-local MAX_ROTATION_SPEED = 300
+local ROTATION_ACCELERATION = math.rad(380)
+local MAX_ROTATION_SPEED = math.rad(300)
 local DECELERATION = 50	-- when turning
 local ACCELERATION = 175
 local GRAVITY = vmath.vector3(0, -10, 0)
 local RATE_OF_FIRE = 0.15
 
+
+local UNITVECTOR_Z = vmath.vector3(0, 0, 1)
+local UNITVECTOR_UP = vmath.vector3(0, 1, 0)
 
 
 local function take_damage(self, amount)
@@ -42,7 +44,6 @@ function init(self)
 	self.speed = MAX_SPEED
 	self.rotation_speed = 0
 	self.acceleration = 0
-	self.angle = 0
 	self.camera_offset = vmath.vector3()
 	self.fire_timeout = 0
 	self.health = 10
@@ -65,7 +66,10 @@ function update(self, dt)
 	local pos = go.get_position()
 	
 	if self.stalling then
-		self.angle = self.angle + (180 - self.angle) * 0.9 * dt
+		local target_quat = vmath.quat_rotation_z(math.rad(180))
+		local current_quat = go.get_rotation()
+		go.set_rotation(vmath.slerp(0.9 * dt, current_quat, target_quat))
+		
 		self.speed = math.max(self.speed - 2 * DECELERATION * dt, MIN_SPEED)
 		if pos.y < MAX_HEIGHT * 0.75 then
 			self.stalling = false
@@ -93,37 +97,37 @@ function update(self, dt)
 	if input.is_pressed(FIRE) then
 		self.fire_timeout = self.fire_timeout - dt
 		if self.fire_timeout <= 0 then
-			factory.create("#bulletfactory", go.get_world_position(), go.get_rotation(), { speed = MAX_BULLET_SPEED, angle = self.angle })
+			factory.create("#bulletfactory", go.get_world_position(), go.get_rotation(), { speed = MAX_BULLET_SPEED })
 			self.fire_timeout = RATE_OF_FIRE
 		end
 	else
 		self.fire_timeout = 0
 	end
 	
-	self.angle = (self.angle + self.rotation_speed * dt) % 360
+	-- update rotation
+	local q = vmath.quat_axis_angle(UNITVECTOR_Z, self.rotation_speed * dt)
+	go.set_rotation(go.get_rotation() * q)
 	
-	local rad = math.rad(self.angle)
+	-- move forward
+	local pos = go.get_position()
 	local distance = self.speed * dt
-	kinematic.forward(rad, distance)
+	pos = pos + vmath.rotate(go.get_rotation(), UNITVECTOR_UP) * distance
 
 	-- apply gravity
-	local pos = go.get_position()
 	local grav = vmath.vector3(0, -(MAX_SPEED * 1.2 - self.speed) * 0.2, 0)
 	pos = pos + grav * dt
 	pos = pos + GRAVITY * dt
+
+	go.set_position(pos)
 	
 	-- check if stalling (ie flying too high)
 	if pos.y > MAX_HEIGHT then
 		self.stalling = true
 		broadcast.send("stalling")
 	end
-	
-	-- update final rotation and position
-	go.set_rotation(vmath.quat_axis_angle(vmath.vector3(0, 0, 1), rad))
-	go.set_position(pos)
-	
+
 	-- adjust camera
-	local target_offset = vmath.vector3(-math.sin(rad) * distance, math.cos(rad) * distance, 0) * 15
+	local target_offset = vmath.rotate(go.get_rotation(), UNITVECTOR_UP) * distance * 15
 	self.camera_offset = self.camera_offset + (target_offset - self.camera_offset) * dt
 	go.set_position(pos + self.camera_offset + CAMERA_OFFSET, "camera")
 end

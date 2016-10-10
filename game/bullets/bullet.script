@@ -1,8 +1,10 @@
 go.property("speed", 0)
 
+local UNITVECTOR_UP = vmath.vector3(0, 1, 0)
+
 local function move(self, amount, dt)
 	local rot = go.get_rotation()
-	local dir = vmath.rotate(rot, vmath.vector3(0, 1, 0))
+	local dir = vmath.rotate(rot, UNITVECTOR_UP)
 	go.set_position(go.get_position() + dir * amount * dt)
 end
 
