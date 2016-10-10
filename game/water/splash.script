@@ -1,6 +1,0 @@
-function init(self)
-	local height = math.random(10,15)
-	go.animate(".", "position.y", go.PLAYBACK_ONCE_PINGPONG, go.get_position().y + height, go.EASING_OUTQUAD, 0.5, 0, function()
-		go.delete()
-	end)
-end
