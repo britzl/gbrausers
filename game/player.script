@@ -37,7 +37,6 @@ end
 
 
 function init(self)
-	print(msg.url())
 	input.acquire()
 	self.direction = vmath.vector3()
 	self.speed = MAX_SPEED
@@ -48,6 +47,7 @@ function init(self)
 	self.fire_timeout = 0
 	self.health = 10
 	self.score = 0
+	
 	broadcast.send("update_health", { health = self.health })
 	broadcast.send("update_score", { score = self.score })
 	broadcast.register("enemyplane_death", function()
@@ -71,9 +71,7 @@ function update(self, dt)
 			self.stalling = false
 			broadcast.send("not_stalling")
 		end
-	end
-	
-	if not self.stalling then
+	else
 		if input.is_pressed(LEFT) then
 			if self.rotation_speed < 0 then
 				self.rotation_speed = -self.rotation_speed
@@ -108,20 +106,21 @@ function update(self, dt)
 	local distance = self.speed * dt
 	kinematic.forward(rad, distance)
 
+	-- apply gravity
 	local pos = go.get_position()
 	local grav = vmath.vector3(0, -(MAX_SPEED * 1.2 - self.speed) * 0.2, 0)
 	pos = pos + grav * dt
 	pos = pos + GRAVITY * dt
 	
+	-- check if stalling (ie flying too high)
 	if pos.y > MAX_HEIGHT then
 		self.stalling = true
 		broadcast.send("stalling")
 	end
 	
-
+	-- update final rotation and position
 	go.set_rotation(vmath.quat_axis_angle(vmath.vector3(0, 0, 1), rad))
 	go.set_position(pos)
-	
 	
 	-- adjust camera
 	local target_offset = vmath.vector3(-math.sin(rad) * distance, math.cos(rad) * distance, 0) * 15

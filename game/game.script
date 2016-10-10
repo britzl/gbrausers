@@ -20,6 +20,7 @@ function init(self)
 		while true do
 			count = count + 1
 			spawn_enemy()
+			-- shorter and shorter delay between spawns
 			flow.delay(ENEMYPLANE_SPAWN_INTERVAL + ENEMYPLANE_SPAWN_INTERVAL / count)
 		end
 	end)

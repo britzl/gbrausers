@@ -9,11 +9,6 @@ function init(self)
 	self.splash_timeouts = {}
 end
 
-function final(self)
-    -- Add finalization code here
-    -- Remove this function if not needed
-end
-
 function on_message(self, message_id, message, sender)
 	if message_id == COLLISION_RESPONSE then
 		if message.group == GROUP_PLAYERBULLET or message.group == GROUP_ENEMYBULLET then
@@ -29,14 +24,4 @@ function on_message(self, message_id, message, sender)
 			end
 		end
 	end
-end
-
-function on_input(self, action_id, action)
-    -- Add input-handling code here
-    -- Remove this function if not needed
-end
-
-function on_reload(self)
-    -- Add reload-handling code here
-    -- Remove this function if not needed
 end

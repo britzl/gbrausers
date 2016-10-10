@@ -20,7 +20,7 @@ function update(self, dt)
 		self.fire_timeout = RATE_OF_FIRE
 	end
 
-
+	-- rotate and move towards player
 	local player_pos = go.get_world_position("game:/player/player")
 	local pos = go.get_world_position()
 	local target_angle = -math.atan2(player_pos.x - pos.x, player_pos.y - pos.y)
