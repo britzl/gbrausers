@@ -1,29 +1,25 @@
-local kinematic = require "ludobits.m.kinematic"
-
 go.property("speed", 0)
-go.property("angle", 0)
+
+local function move(self, amount, dt)
+	local rot = go.get_rotation()
+	local dir = vmath.rotate(rot, vmath.vector3(0, 1, 0))
+	go.set_position(go.get_position() + dir * amount * dt)
+end
 
 function init(self)
-	self.speed = self.speed + 300
+	self.speed = self.speed * 1.25
 	self.lifetime = 3
+	move(self, 10, 1)
 end
 
 function update(self, dt)
-	kinematic.forward(math.rad(self.angle), self.speed * dt)
+	move(self, self.speed, dt)
+
+
 	self.lifetime = self.lifetime - dt
 	if self.lifetime <= 0 then
 		go.delete()
 	end
-end
-
-function on_message(self, message_id, message, sender)
-    -- Add message-handling code here
-    -- Remove this function if not needed
-end
-
-function on_input(self, action_id, action)
-    -- Add input-handling code here
-    -- Remove this function if not needed
 end
 
 function on_reload(self)

@@ -4,7 +4,7 @@ version = 0.1
 dependencies = https://github.com/britzl/ludobits/archive/master.zip
 
 [bootstrap]
-main_collection = /game/game.collectionc
+main_collection = /controller/controller.collectionc
 render = /render/gb.renderc
 
 [input]
@@ -26,5 +26,8 @@ default_texture_min_filter = nearest
 default_texture_mag_filter = nearest
 
 [sprite]
-max_count = 1024
+max_count = 4096
+
+[collection]
+max_instances = 4096
 

@@ -1,0 +1,46 @@
+local broadcast = require "ludobits.m.broadcast"
+local flow = require "ludobits.m.flow"
+
+local function show_game()
+end
+
+local function restart()
+	flow(function()
+		flow.unload("#gameproxy")
+		flow.load("#gameproxy")
+	end)
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	broadcast.register("player_death", function()
+		restart()
+	end)
+	
+	flow(function()
+		flow.load("#gameproxy")
+	end)
+end
+
+function final(self)
+	msg.post(".", "release_input_focus")
+end
+
+function update(self, dt)
+	flow.update(dt)
+end
+
+function on_message(self, message_id, message, sender)
+	flow.on_message(message_id, message, sender)
+	broadcast.on_message(message_id, message, sender)
+end
+
+function on_input(self, action_id, action)
+    -- Add input-handling code here
+    -- Remove this function if not needed
+end
+
+function on_reload(self)
+    -- Add reload-handling code here
+    -- Remove this function if not needed
+end

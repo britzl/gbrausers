@@ -20,31 +20,11 @@ collection_instances {
   }
 }
 collection_instances {
-  id: "enemyplane"
-  collection: "/game/enemyplane.collection"
-  position {
-    x: 121.80786
-    y: 88.0816
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-collection_instances {
   id: "player"
   collection: "/game/player.collection"
   position {
-    x: 81.55242
-    y: 57.536983
+    x: 0.0
+    y: 0.0
     z: 0.0
   }
   rotation {
@@ -85,6 +65,23 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/game/game.script\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"enemyplane_factory\"\n"
+  "  type: \"factory\"\n"
+  "  data: \"prototype: \\\"/game/enemyplane.go\\\"\\n"
+  "\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"

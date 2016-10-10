@@ -25,7 +25,7 @@ function on_message(self, message_id, message, sender)
 				local pos = message.other_position
 				pos.y = 0
 				factory.create("#splashfactory", pos)
-				self.splash_timeouts[message.other_id] = socket.gettime() + 0.1
+				self.splash_timeouts[message.other_id] = socket.gettime() + 0.05
 			end
 		end
 	end

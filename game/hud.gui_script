@@ -1,0 +1,22 @@
+local broadcast = require "ludobits.m.broadcast"
+
+function init(self)
+	local health_node = gui.get_node("health")
+	local score_node = gui.get_node("score")
+
+	broadcast.register("update_health", function(message)
+		gui.set_text(health_node, "DMG:" .. message.health)
+	end)
+	broadcast.register("update_score", function(message)
+		gui.set_text(score_node, "SCORE:" .. message.score)
+	end)
+end
+
+function final(self)
+	broadcast.unregister("update_health")
+	broadcast.unregister("update_score")
+end
+
+function on_message(self, message_id, message, sender)
+	broadcast.on_message(message_id, message, sender)
+end

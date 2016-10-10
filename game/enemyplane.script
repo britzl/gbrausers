@@ -1,43 +1,44 @@
-local kinematic = require "ludobits.m.kinematic"
+local broadcast = require "ludobits.m.broadcast"
 
-local rotation_speed = math.rad(50)
+local ROTATION_SLERP = 0.1
+local RATE_OF_FIRE = 0.75
+local MAX_SPEED = 100
+local BULLET_SPEED = 150
+
+local COLLISION_RESPONSE = hash("collision_response")
+local GROUP_PLAYERBULLET = hash("playerbullet")
 
 function init(self)
-	print(msg.url())
-	self.speed = 0
-	self.angle = 0
-	self.speed = 100
-end
-
-function final(self)
-    -- Add finalization code here
-    -- Remove this function if not needed
+	self.speed = MAX_SPEED
+	self.fire_timeout = 0
 end
 
 function update(self, dt)
+	self.fire_timeout = self.fire_timeout - dt
+	if self.fire_timeout <= 0 then
+		factory.create("#bulletfactory", go.get_world_position(), nil, { speed = BULLET_SPEED, angle = self.angle })
+		self.fire_timeout = RATE_OF_FIRE
+	end
+
+
 	local player_pos = go.get_world_position("game:/player/player")
 	local pos = go.get_world_position()
 	local target_angle = -math.atan2(player_pos.x - pos.x, player_pos.y - pos.y)
 	local target_quat = vmath.quat_rotation_z(target_angle)
 	local current_quat = go.get_rotation()
 	
-	local q = vmath.slerp(0.1, current_quat, target_quat)
+	local q = vmath.slerp(ROTATION_SLERP, current_quat, target_quat)
 	go.set_rotation(q)
 	local d = vmath.rotate(q, vmath.vector3(0, 1, 0))
 	go.set_position(pos + d * self.speed * dt)
 end
 
 function on_message(self, message_id, message, sender)
-    -- Add message-handling code here
-    -- Remove this function if not needed
-end
-
-function on_input(self, action_id, action)
-    -- Add input-handling code here
-    -- Remove this function if not needed
-end
-
-function on_reload(self)
-    -- Add reload-handling code here
-    -- Remove this function if not needed
+	broadcast.on_message(message_id, message, sender)
+	if message_id == COLLISION_RESPONSE then
+		if message.group == GROUP_PLAYERBULLET then
+			broadcast.send("enemyplane_death")
+			go.delete()
+		end
+	end
 end
