@@ -4,6 +4,7 @@ local GROUP_PLAYER = hash("player")
 local GROUP_ENEMY = hash("enemy")
 local GROUP_PLAYERBULLET = hash("playerbullet")
 local GROUP_ENEMYBULLET = hash("enemybullet")
+local GROUP_DEBRIS = hash("debris")
 
 function init(self)
 	self.splash_timeouts = {}
@@ -11,7 +12,7 @@ end
 
 function on_message(self, message_id, message, sender)
 	if message_id == COLLISION_RESPONSE then
-		if message.group == GROUP_PLAYERBULLET or message.group == GROUP_ENEMYBULLET then
+		if message.group == GROUP_PLAYERBULLET or message.group == GROUP_ENEMYBULLET or message.group == GROUP_DEBRIS then
 			go.delete(message.other_id)
 			factory.create("#splashfactory", message.other_position)
 		elseif message.group == GROUP_PLAYER or message.group == GROUP_ENEMY then

@@ -4,7 +4,7 @@ local broadcast = require "ludobits.m.broadcast"
 local ENEMYPLANE_SPAWN_INTERVAL = 5
 
 local function spawn_enemy()
-	factory.create("#enemyplane_factory", vmath.vector3(math.random(-400, 400), -20, 0))
+	factory.create("#enemyplane_factory", go.get_position("player/player") + vmath.vector3(math.random(-400, 400), -20, 0))
 end
 
 function init(self)

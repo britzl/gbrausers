@@ -1,0 +1,21 @@
+local function dampen(value, amount, dt)
+	return math.max(0, value - (value - (value * amount * dt)))
+end
+
+function init(self)
+	self.speed = vmath.vector3(math.random(1,200) - 100, math.random(1,200) - 50, 0)
+	local rot = go.get_rotation()
+	
+	--go.animate(".", "rotation", go.PLAYBACK_LOOP_FORWARD, rot * vmath.quat_rotation_z(math.rad(360)), go.EASING_LINEAR, 0.6)
+end
+
+function update(self, dt)
+	self.speed.x = dampen(self.speed.x, 0.9, dt)
+	self.speed.y = self.speed.y - 500 * dt
+	go.set_position(go.get_position() + self.speed * dt)
+end
+
+function on_reload(self)
+    -- Add reload-handling code here
+    -- Remove this function if not needed
+end

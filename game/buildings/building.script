@@ -1,0 +1,48 @@
+local flow = require "ludobits.m.flow"
+
+local CONTACT_POINT_RESPONSE = hash("contact_point_response")
+
+function init(self)
+	self.damage = 3
+	self.original_position = go.get_position()
+end
+
+function final(self)
+end
+
+function update(self, dt)
+	flow.update(dt)
+end
+
+function on_message(self, message_id, message, sender)
+	flow.on_message(message_id, message, sender)
+	if message_id == CONTACT_POINT_RESPONSE then
+		factory.create("#debrisfactory", message.other_position, vmath.quat_rotation_z(math.rad(math.random(1,360))))
+		go.delete(message.other_id)
+		self.damage = self.damage - 1
+		if self.damage <= 0 then
+			msg.post("#collisionobject", "disable")
+			go.animate(".", "position.y", go.PLAYBACK_ONCE_FORWARD, -self.original_position.y, go.EASING_INCUBIC, 1, 0, function()
+				print("deleting building")
+				go.delete()
+			end)
+			flow(function()
+				while true do
+					local pos = vmath.vector3(self.original_position.x + math.random(1,30) - 15, 0, 0)
+					factory.create("#debrisfactory", pos, vmath.quat_rotation_z(math.rad(math.random(1,360))))
+					flow.delay(0.01)
+				end
+			end)
+		end
+	end
+end
+
+function on_input(self, action_id, action)
+    -- Add input-handling code here
+    -- Remove this function if not needed
+end
+
+function on_reload(self)
+    -- Add reload-handling code here
+    -- Remove this function if not needed
+end

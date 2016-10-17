@@ -8,19 +8,23 @@ local GROUP_GROUND = hash("ground")
 local GROUP_ENEMYBULLET = hash("enemybullet")
 
 
+local UP = hash("up")
 local LEFT = hash("left")
 local RIGHT = hash("right")
 local FIRE = hash("fire")
 
 local MAX_HEIGHT = 400
+local MAX_WIDTH = 3500
+
 local MAX_SPEED = 200
 local MAX_BULLET_SPEED = 300
 local MIN_SPEED = 50
 local ROTATION_ACCELERATION = math.rad(380)
 local MAX_ROTATION_SPEED = math.rad(300)
-local DECELERATION = 50	-- when turning
+local TURN_DECELERATION = 50	-- when turning
+local DECELERATION = 250		-- when not thrusting
 local ACCELERATION = 175
-local GRAVITY = vmath.vector3(0, -10, 0)
+local GRAVITY = vmath.vector3(0, -75, 0)
 local RATE_OF_FIRE = 0.15
 
 
@@ -38,12 +42,23 @@ local function take_damage(self, amount)
 end
 
 
+local function dampen(value, amount, dt)
+	local diff = math.abs(value) - math.abs(value * amount)
+	if value < 0 then
+		return math.min(0, value + (diff * dt))
+	else
+		return math.max(0, value - (diff * dt))
+	end
+end
+
+
 function init(self)
 	input.acquire()
 	self.direction = vmath.vector3()
 	self.speed = MAX_SPEED
 	self.rotation_speed = 0
 	self.acceleration = 0
+	self.gravity = vmath.vector3(0, 0, 0)
 	self.camera_offset = vmath.vector3()
 	self.fire_timeout = 0
 	self.health = 10
@@ -65,33 +80,30 @@ end
 function update(self, dt)
 	local pos = go.get_position()
 	
-	if self.stalling then
-		local target_quat = vmath.quat_rotation_z(math.rad(180))
-		local current_quat = go.get_rotation()
-		go.set_rotation(vmath.slerp(0.9 * dt, current_quat, target_quat))
-		
-		self.speed = math.max(self.speed - 2 * DECELERATION * dt, MIN_SPEED)
-		if pos.y < MAX_HEIGHT * 0.75 then
-			self.stalling = false
-			broadcast.send("not_stalling")
+	if input.is_pressed(LEFT) then
+		if self.rotation_speed < 0 then
+			self.rotation_speed = -self.rotation_speed * 0.8
 		end
+		self.rotation_speed = math.min(self.rotation_speed + ROTATION_ACCELERATION * dt, MAX_ROTATION_SPEED)
+		self.speed = math.max(self.speed - TURN_DECELERATION * dt, MIN_SPEED)
+	elseif input.is_pressed(RIGHT) then
+		if self.rotation_speed > 0 then
+			self.rotation_speed = -self.rotation_speed * 0.8
+		end
+		self.rotation_speed = math.max(self.rotation_speed - ROTATION_ACCELERATION * dt, -MAX_ROTATION_SPEED)
+		self.speed = math.max(self.speed - TURN_DECELERATION * dt, MIN_SPEED)
 	else
-		if input.is_pressed(LEFT) then
-			if self.rotation_speed < 0 then
-				self.rotation_speed = -self.rotation_speed
-			end
-			self.rotation_speed = math.min(self.rotation_speed + ROTATION_ACCELERATION * dt, MAX_ROTATION_SPEED)
-			self.speed = math.max(self.speed - DECELERATION * dt, MIN_SPEED)
-		elseif input.is_pressed(RIGHT) then
-			if self.rotation_speed > 0 then
-				self.rotation_speed = -self.rotation_speed
-			end
-			self.rotation_speed = math.max(self.rotation_speed - ROTATION_ACCELERATION * dt, -MAX_ROTATION_SPEED)
-			self.speed = math.max(self.speed - DECELERATION *dt, MIN_SPEED)
-		else
-			self.rotation_speed = self.rotation_speed * 0.9
-			self.speed = math.min(self.speed + ACCELERATION *dt, MAX_SPEED)
-		end
+		self.rotation_speed = self.rotation_speed * 0.9
+	end
+
+	if input.is_pressed(UP) then
+		self.speed = math.min(self.speed + ACCELERATION * dt, MAX_SPEED)
+		broadcast.send("thrusting")
+		self.gravity.y = dampen(self.gravity.y, 0.1, dt)
+	else
+		self.speed = math.max(self.speed - DECELERATION * dt, MIN_SPEED)
+		broadcast.send("not_thrusting")
+		self.gravity = self.gravity + GRAVITY * dt
 	end
 	
 	if input.is_pressed(FIRE) then
@@ -108,24 +120,24 @@ function update(self, dt)
 	local q = vmath.quat_axis_angle(UNITVECTOR_Z, self.rotation_speed * dt)
 	go.set_rotation(go.get_rotation() * q)
 	
-	-- move forward
+	-- move forward and limit horizontally
 	local pos = go.get_position()
 	local distance = self.speed * dt
-	pos = pos + vmath.rotate(go.get_rotation(), UNITVECTOR_UP) * distance
-
-	-- apply gravity
-	local grav = vmath.vector3(0, -(MAX_SPEED * 1.2 - self.speed) * 0.2, 0)
-	pos = pos + grav * dt
-	pos = pos + GRAVITY * dt
+	local direction = vmath.rotate(go.get_rotation(), UNITVECTOR_UP) * distance
+	if pos.x > MAX_WIDTH then
+		direction.x = direction.x - (pos.x - MAX_WIDTH) * dt
+	elseif pos.x < -MAX_WIDTH then
+		direction.x = direction.x - (pos.x + MAX_WIDTH) * dt
+	end
+	pos = pos + direction
+	
+	-- apply gravity and limit height
+	local vertical_limit = vmath.vector3(0, math.min(0, MAX_HEIGHT - pos.y), 0)
+	self.gravity = self.gravity + vertical_limit * dt
+	pos = pos + self.gravity * dt
 
 	go.set_position(pos)
 	
-	-- check if stalling (ie flying too high)
-	if pos.y > MAX_HEIGHT then
-		self.stalling = true
-		broadcast.send("stalling")
-	end
-
 	-- adjust camera
 	local target_offset = vmath.rotate(go.get_rotation(), UNITVECTOR_UP) * distance * 15
 	self.camera_offset = self.camera_offset + (target_offset - self.camera_offset) * dt

@@ -25,6 +25,18 @@ images {
 images {
   image: "/assets/images/logo.png"
 }
+images {
+  image: "/assets/images/debris.png"
+}
+images {
+  image: "/assets/images/building.png"
+}
+images {
+  image: "/assets/images/building1.png"
+}
+images {
+  image: "/assets/images/roof1.png"
+}
 margin: 0
 extrude_borders: 2
 inner_padding: 0

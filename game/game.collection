@@ -1,4 +1,84 @@
 name: "game"
+instances {
+  id: "building1"
+  prototype: "/game/buildings/building.go"
+  position {
+    x: 168.03029
+    y: 67.13114
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "building2"
+  prototype: "/game/buildings/building.go"
+  position {
+    x: 206.01895
+    y: 54.78483
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "building3"
+  prototype: "/game/buildings/building.go"
+  position {
+    x: 231.11188
+    y: 65.87958
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "building4"
+  prototype: "/game/buildings/building.go"
+  position {
+    x: 291.01855
+    y: 40.80221
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
 collection_instances {
   id: "clouds"
   collection: "/game/clouds/clouds.collection"

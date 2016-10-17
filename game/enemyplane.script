@@ -1,6 +1,6 @@
 local broadcast = require "ludobits.m.broadcast"
 
-local ROTATION_SLERP = 0.1
+local ROTATION_SLERP = 0.08
 local RATE_OF_FIRE = 0.75
 local MAX_SPEED = 100
 local BULLET_SPEED = 150
@@ -39,6 +39,9 @@ function on_message(self, message_id, message, sender)
 		if message.group == GROUP_PLAYERBULLET then
 			broadcast.send("enemyplane_death")
 			go.delete()
+			for i=1,5 do
+				factory.create("#debrisfactory", go.get_world_position(), vmath.quat_rotation_z(math.rad(math.random(1,360))))
+			end
 		end
 	end
 end

@@ -1,6 +1,6 @@
 components {
   id: "script"
-  component: "/game/bullets/bullet.script"
+  component: "/game/debris/debris.script"
   position {
     x: 0.0
     y: 0.0
@@ -21,11 +21,8 @@ embedded_components {
   "mass: 0.0\n"
   "friction: 0.1\n"
   "restitution: 0.5\n"
-  "group: \"playerbullet\"\n"
-  "mask: \"enemy\"\n"
-  "mask: \"ground\"\n"
+  "group: \"debris\"\n"
   "mask: \"water\"\n"
-  "mask: \"building\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_SPHERE\n"
@@ -43,7 +40,7 @@ embedded_components {
   "    index: 0\n"
   "    count: 1\n"
   "  }\n"
-  "  data: 2.5\n"
+  "  data: 4.0\n"
   "}\n"
   "linear_damping: 0.0\n"
   "angular_damping: 0.0\n"
@@ -65,7 +62,7 @@ embedded_components {
   id: "sprite"
   type: "sprite"
   data: "tile_set: \"/assets/game.atlas\"\n"
-  "default_animation: \"bullet\"\n"
+  "default_animation: \"debris\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""

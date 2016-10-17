@@ -76,6 +76,23 @@ embedded_components {
   }
 }
 embedded_components {
+  id: "debrisfactory"
+  type: "factory"
+  data: "prototype: \"/game/debris/debris.go\"\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
   id: "splashtrigger"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"

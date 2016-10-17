@@ -14,7 +14,13 @@ function init(self)
 		self.thrusting = false
 	end)
 	broadcast.register("not_stalling", function()
+		--self.thrusting = true
+	end)
+	broadcast.register("thrusting", function()
 		self.thrusting = true
+	end)
+	broadcast.register("not_thrusting", function()
+		self.thrusting = false
 	end)
 	
 	self.trail_instance = flow(function()
@@ -50,6 +56,8 @@ function final(self)
 	flow.stop(self.trail_instance)
 	broadcast.unregister("stalling")
 	broadcast.unregister("not_stalling")
+	broadcast.unregister("thrusting")
+	broadcast.unregister("not_thrusting")
 end
 
 function update(self, dt)
