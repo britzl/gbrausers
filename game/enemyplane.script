@@ -1,15 +1,16 @@
 local broadcast = require "ludobits.m.broadcast"
 
-local ROTATION_SLERP = 0.08
-local RATE_OF_FIRE = 0.75
-local MAX_SPEED = 100
+go.property("MAX_SPEED", 100)
+go.property("RATE_OF_FIRE", 0.75)
+go.property("ROTATION_SLERP", 0.08)
+
 local BULLET_SPEED = 150
 
 local COLLISION_RESPONSE = hash("collision_response")
 local GROUP_PLAYERBULLET = hash("playerbullet")
 
 function init(self)
-	self.speed = MAX_SPEED
+	self.speed = self.MAX_SPEED
 	self.fire_timeout = 0
 end
 
@@ -17,7 +18,7 @@ function update(self, dt)
 	self.fire_timeout = self.fire_timeout - dt
 	if self.fire_timeout <= 0 then
 		factory.create("#bulletfactory", go.get_world_position(), nil, { speed = BULLET_SPEED, angle = self.angle })
-		self.fire_timeout = RATE_OF_FIRE
+		self.fire_timeout = self.RATE_OF_FIRE
 	end
 
 	-- rotate and move towards player
@@ -27,7 +28,7 @@ function update(self, dt)
 	local target_quat = vmath.quat_rotation_z(target_angle)
 	local current_quat = go.get_rotation()
 	
-	local q = vmath.slerp(ROTATION_SLERP, current_quat, target_quat)
+	local q = vmath.slerp(self.ROTATION_SLERP, current_quat, target_quat)
 	go.set_rotation(q)
 	local d = vmath.rotate(q, vmath.vector3(0, 1, 0))
 	go.set_position(pos + d * self.speed * dt)
