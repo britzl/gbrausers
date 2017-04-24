@@ -27,6 +27,7 @@ default_texture_mag_filter = nearest
 
 [sprite]
 max_count = 4096
+subpixels = 1
 
 [collection]
 max_instances = 4096
