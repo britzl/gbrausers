@@ -1,7 +1,7 @@
 [project]
 title = GBRausers
 version = 0.1
-dependencies = https://github.com/britzl/ludobits/archive/master.zip
+dependencies = https://github.com/britzl/ludobits/archive/1.1.1.zip
 
 [bootstrap]
 main_collection = /controller/controller.collectionc
