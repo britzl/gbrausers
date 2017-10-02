@@ -9,4 +9,4 @@ Created by Björn Ritzl
 This is the version submitted to GB Jam 5: https://britzl.itch.io/gbjamrausers
 
 # Improved version
-Play the improved version based on the current code base here: 
+Play the improved version based on the current code base here: https://britzl.github.io/gbrausers/
