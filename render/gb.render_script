@@ -23,11 +23,20 @@ function update(self)
 
 	local w = render.get_window_width()
 	local h = render.get_window_height()
-	local min_size = math.min(w, h)
-	local max_size = math.max(w, h)
-	local offset = (max_size - min_size) / 2
-	--render.set_viewport(w > h and offset or 0, w < h and offset or 0, min_size, min_size)
-	render.set_viewport(0, 0, WIDTH * ZOOM, HEIGHT * ZOOM)
+	
+	-- Get the new coordinates and center coordinates
+	local height_ratio = h / HEIGHT
+	local needed_width = WIDTH * height_ratio
+	local width_margin = w - needed_width
+	local x_offset = width_margin / 2
+
+	-- Disabled Render Scripts
+	-- render.set_viewport(w > h and offset or 0, w < h and offset or 0, min_size, min_size)
+	-- render.set_viewport(0, 0, WIDTH * ZOOM, HEIGHT * ZOOM)
+
+	-- New Render Script
+	render.set_viewport(x_offset, 0, needed_width, h)
+	
 	render.set_view(self.view)
 
 	render.set_depth_mask(false)

@@ -71,6 +71,7 @@ embedded_instances {
   "  id: \"splashfactory\"\n"
   "  type: \"factory\"\n"
   "  data: \"prototype: \\\"/game/water/splash.go\\\"\\n"
+  "load_dynamically: false\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"

@@ -62,6 +62,7 @@ embedded_instances {
   "  id: \"bulletfactory\"\n"
   "  type: \"factory\"\n"
   "  data: \"prototype: \\\"/game/bullets/playerbullet.go\\\"\\n"
+  "load_dynamically: false\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
