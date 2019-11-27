@@ -79,6 +79,8 @@ end
 
 function update(self, dt)
 	local pos = go.get_position()
+	-- Used for screen shake functionality
+	local camera_pos = self.original_camera_position or go.get_position("camera")
 	
 	if input.is_pressed(LEFT) then
 		if self.rotation_speed < 0 then
@@ -109,6 +111,10 @@ function update(self, dt)
 	if input.is_pressed(FIRE) then
 		self.fire_timeout = self.fire_timeout - dt
 		if self.fire_timeout <= 0 then
+			-- Shake game object
+			msg.post("#", "shake", {time = 0.5, x = 2, y = 2, speed = 0.033})
+
+			-- Generate the bullet
 			factory.create("#bulletfactory", go.get_world_position(), go.get_rotation(), { speed = MAX_BULLET_SPEED })
 			self.fire_timeout = RATE_OF_FIRE
 		end
@@ -139,9 +145,38 @@ function update(self, dt)
 	go.set_position(pos)
 	
 	-- adjust camera
+
+	-- Camera Screen Shake Functionality
+	-- Borrowed from: https://gist.github.com/johnnyjr/39d44e22086acc5730b96896f4c9a94b
+	local camera_pos = self.original_camera_position or go.get_position("camera")
+	self.shake = vmath.vector3()
+	
+	if self.shakes and next(self.shakes) then
+		for i,shake in pairs(self.shakes) do
+			shake.time = shake.time - dt
+			shake.to_target = shake.to_target - dt
+
+			if shake.to_target <= 0 then
+				shake.a = vmath.vector3(shake.b)
+				shake.b = vmath.vector3((math.random() - 0.5) * shake.x, (math.random() - 0.5) * shake.y, 0)
+				shake.to_target = math.min(shake.time, shake.speed)
+				shake.to_target_max = shake.to_target
+			end
+
+			self.shake = self.shake + vmath.lerp(shake.to_target / shake.to_target_max, shake.b, shake.a)
+
+			if shake.time <= 0 then
+				table.remove(self.shakes, i)
+			end
+		end
+	elseif self.original_camera_position then
+		camera_pos = self.original_camera_position
+		self.original_camera_position = nil
+	end
+	
 	local target_offset = vmath.rotate(go.get_rotation(), UNITVECTOR_UP) * distance * 15
 	self.camera_offset = self.camera_offset + (target_offset - self.camera_offset) * dt
-	go.set_position(pos + self.camera_offset + CAMERA_OFFSET, "camera")
+	go.set_position(pos + self.camera_offset + CAMERA_OFFSET + self.shake, "camera")
 end
 
 function on_message(self, message_id, message, sender)
@@ -150,9 +185,27 @@ function on_message(self, message_id, message, sender)
 		if message.group == GROUP_GROUND then
 			take_damage(self, self.health)
 		elseif message.group == GROUP_ENEMYBULLET then
+			-- Shake game object
+			msg.post("#", "shake", {time = 0.5, x = 10, y = 10, speed = 0.033})
+
+			-- Take damage and delete the bullet object
 			take_damage(self, 1)
 			go.delete(message.other_id)
 		end
+	elseif message_id == hash("shake") then
+		-- Camera Screen Shake Functionality
+		-- Borrowed from: https://gist.github.com/johnnyjr/39d44e22086acc5730b96896f4c9a94b
+		self.original_camera_position = go.get_position("camera")
+
+		if not self.shakes then
+			self.shakes = {}
+		end
+
+		message.to_target = 0
+		message.a = vmath.vector3()
+		message.b = vmath.vector3()
+
+		table.insert(self.shakes, message)
 	end
 end
 
