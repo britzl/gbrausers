@@ -32,7 +32,3 @@ function on_message(self, message_id, message, sender)
 		self.enabled = 0
 	end
 end
-
-function on_reload(self)
-	msg.post("#", "shake", {time = 2.75, x = 35, y = 35, speed = 0.033})
-end
