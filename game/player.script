@@ -1,7 +1,7 @@
 local input = require "ludobits.m.input"
 local broadcast = require "ludobits.m.broadcast"
 
-local CAMERA_OFFSET = vmath.vector3(-80, -77, 0)
+local CAMERA_OFFSET = vmath.vector3(-320, -288, 0)
 
 local COLLISION_RESPONSE = hash("collision_response")
 local GROUP_GROUND = hash("ground")
@@ -53,6 +53,9 @@ end
 
 
 function init(self)
+	msg.post("camera", "acquire_camera_focus")
+	msg.post("@render:", "use_fixed_projection", { zoom = 4 })
+	
 	input.acquire()
 	self.direction = vmath.vector3()
 	self.speed = MAX_SPEED

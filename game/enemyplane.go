@@ -17,6 +17,7 @@ embedded_components {
   id: "bulletfactory"
   type: "factory"
   data: "prototype: \"/game/bullets/enemybullet.go\"\n"
+  "load_dynamically: false\n"
   ""
   position {
     x: 0.0
@@ -79,6 +80,7 @@ embedded_components {
   id: "debrisfactory"
   type: "factory"
   data: "prototype: \"/game/debris/debris.go\"\n"
+  "load_dynamically: false\n"
   ""
   position {
     x: 0.0
