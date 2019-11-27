@@ -161,6 +161,7 @@ embedded_instances {
   "  id: \"enemyplane_factory\"\n"
   "  type: \"factory\"\n"
   "  data: \"prototype: \\\"/game/enemyplane.go\\\"\\n"
+  "load_dynamically: false\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"

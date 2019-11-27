@@ -17,6 +17,7 @@ embedded_components {
   id: "factory"
   type: "factory"
   data: "prototype: \"/game/trail.go\"\n"
+  "load_dynamically: false\n"
   ""
   position {
     x: 0.0
