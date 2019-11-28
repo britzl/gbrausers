@@ -1,7 +1,7 @@
 local input = require "ludobits.m.input"
 local broadcast = require "ludobits.m.broadcast"
 
-local CAMERA_OFFSET = vmath.vector3(-80, -77, 0)
+local CAMERA_OFFSET = vmath.vector3(-320, -288, 0)
 
 local COLLISION_RESPONSE = hash("collision_response")
 local GROUP_GROUND = hash("ground")
@@ -53,6 +53,9 @@ end
 
 
 function init(self)
+	msg.post("camera", "acquire_camera_focus")
+	msg.post("@render:", "use_fixed_projection", { zoom = 4 })
+	
 	input.acquire()
 	self.direction = vmath.vector3()
 	self.speed = MAX_SPEED
@@ -111,9 +114,6 @@ function update(self, dt)
 	if input.is_pressed(FIRE) then
 		self.fire_timeout = self.fire_timeout - dt
 		if self.fire_timeout <= 0 then
-			-- Shake game object
-			msg.post("#", "shake", {time = 0.5, x = 2, y = 2, speed = 0.033})
-
 			-- Generate the bullet
 			factory.create("#bulletfactory", go.get_world_position(), go.get_rotation(), { speed = MAX_BULLET_SPEED })
 			self.fire_timeout = RATE_OF_FIRE
