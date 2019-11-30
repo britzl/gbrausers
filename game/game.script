@@ -8,6 +8,9 @@ local function spawn_enemy()
 end
 
 function init(self)
+	-- Play the game sound track
+	sound.play("#game_track", {delay = 0.5, gain = 1, pan = 1, speed = 1})
+	
 	msg.post(".", "acquire_input_focus")
 	math.randomseed(os.time())
 	msg.post("@render:", "clear_color", { color = vmath.vector4(134/255, 174/255, 114/255, 1) })
@@ -28,6 +31,9 @@ function init(self)
 end
 
 function final(self)
+	-- Stop the menu sound track
+	sound.stop("#game_track")
+	
 	msg.post(".", "release_input_focus")
 	flow.stop(self.gameloop)
 	broadcast.unregister("enemyplane_death")

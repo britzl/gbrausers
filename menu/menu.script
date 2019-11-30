@@ -1,0 +1,9 @@
+function init(self)
+	-- Play the menu sound track
+	sound.play("#menu_track", {delay = 0.5, gain = 1, pan = 1, speed = 1})
+end
+
+function final(self)
+	-- Stop the menu sound track
+	sound.stop("#menu_track")
+end
