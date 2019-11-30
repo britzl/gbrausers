@@ -9,7 +9,7 @@ end
 
 function init(self)
 	-- Play the game sound track
-	sound.play("#game_track", {delay = 1, gain = 1, pan = 1, speed = 1})
+	sound.play("#game_track", {delay = 0.5, gain = 1, pan = 1, speed = 1})
 	
 	msg.post(".", "acquire_input_focus")
 	math.randomseed(os.time())
