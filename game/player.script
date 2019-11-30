@@ -115,6 +115,7 @@ function update(self, dt)
 		self.fire_timeout = self.fire_timeout - dt
 		if self.fire_timeout <= 0 then
 			-- Generate the bullet
+			sound.play("#shoot_sfx", {delay = 0, gain = 1, pan = 1, speed = 1})
 			factory.create("#bulletfactory", go.get_world_position(), go.get_rotation(), { speed = MAX_BULLET_SPEED })
 			self.fire_timeout = RATE_OF_FIRE
 		end
