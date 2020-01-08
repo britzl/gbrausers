@@ -10,3 +10,11 @@ This is the version submitted to GB Jam 5: https://britzl.itch.io/gbjamrausers
 
 # Improved version
 Play the improved version based on the current code base here: https://britzl.github.io/gbrausers/
+
+# Further improvements
+Further improvements to the game have been made to a seperate fork by [@ahmedmaawy](https://github.com/ahmedmaawy/gbrausers)
+
+* Implements screen shake functionality when the player is hit by a bullet
+* Integrates sound effects and background music
+
+You can find the fork on [GitHub](https://github.com/ahmedmaawy/gbrausers) or play the modified version [online](https://ahmed-gbrausers.netlify.com/)
